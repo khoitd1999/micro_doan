@@ -1,0 +1,72 @@
+# Docker Compose file Reference (https://docs.docker.com/compose/compose-file/)
+version: '3.7'
+
+services:
+  # Registration service
+  registration:
+    image: khoitd1999/discovery_doan:v1
+    container_name: discovery_doan
+    build:
+      context: Discovery
+      dockerfile: Dockerfile
+    hostname: eureka
+    ports:
+      - "8761:8761"
+    restart: always 
+    networks:
+      - registration-network
+    
+   # Redis Service
+  redis:
+    container_name: redis
+    image: redis
+    ports:
+      - "6379:6379"
+    hostname: rds
+    restart: always
+    networks:
+      - redis-network
+
+  # Gateway Service
+  gateway:
+    image: khoitd1999/gateway_doan:v1
+    container_name: gateway_doan
+    build:
+      context: Gateway
+      dockerfile: Dockerfile
+    ports:
+      - "1999:1999"
+    restart: always
+    depends_on:
+      - registration
+      - redis
+    networks:
+      - registration-network
+      - redis-network 
+
+  # Postgresql Service
+  db:
+    image: postgres
+    container_name: postgresdb_doan
+    restart: always
+    hostname: postgres
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=123456a@
+      - POSTGRES_DB=newdb
+    volumes:
+      - postgres_db:/var/lib/postgresql/data
+      - ./init_v1.sql:/docker-entrypoint-initdb.d/create_tables.sql
+    networks:
+      - postgres-network
+
+volumes:
+  postgres_db:
+
+# Networks to be created to facilitate communication between containers
+networks:
+  registration-network:
+  redis-network:
+  postgres-network:
