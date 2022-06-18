@@ -23,12 +23,8 @@ public class GatewayConfig {
     public RouteLocator myRoute(RouteLocatorBuilder routeLocatorBuilder) {
         return routeLocatorBuilder.routes()
                 .route(p -> p
-                        .path("/users/**")
-                        .filters(f -> f.requestRateLimiter().configure(c -> c.setRateLimiter(redisRateLimiter()).setStatusCode(HttpStatus.TOO_MANY_REQUESTS)))
-                        .uri("lb://users-service"))
-                .route(p -> p
-                        .path("/comment/**")
-                        .uri("lb://comment-service"))
+                        .path("/product/**")
+                        .uri("lb://product-module"))
                 .build();
     }
 
