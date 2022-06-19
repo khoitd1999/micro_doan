@@ -43,7 +43,7 @@ public class ProductController {
     }
 
     @GetMapping("/get-brand")
-    public ResponseEntity<List<Brand>> getBrand(@RequestParam Long idCat) throws JsonProcessingException {
+    public ResponseEntity<List<Brand>> getBrand(@RequestParam String idCat) throws JsonProcessingException {
         try {
             List<Brand> rs = productService.getBrand(idCat);
             return new ResponseEntity<>(rs, HttpStatus.OK);

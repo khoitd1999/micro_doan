@@ -31,7 +31,7 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
         Map<String, Object> params = new HashMap<>();
         sql.append(" From Product where 1 = 1 ");
         if (Boolean.FALSE.equals(searchTermDTO.getIsAdmin())) {
-            sql.append(" and status = 1 ");
+            sql.append(" and status = true ");
         }
         if (searchTermDTO.getNameSearch() != null && !searchTermDTO.getNameSearch().trim().isEmpty()) {
             sql.append(" and name_pro like :name");
@@ -134,12 +134,12 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
         StringBuilder sql = new StringBuilder();
         List<ProductDTO> lst = new ArrayList<>();
         Map<String, Object> params = new HashMap<>();
-        sql.append("(select id, name_pro namePro, price, id_cat idCat, id_bra idBra, image from product where id_bra = :idBra0 and id_cat = :idCat0 ").append(" and status = 1 order by date desc limit 6) ");
+        sql.append("(select id, name_pro namePro, price, id_cat idCat, id_bra idBra, image from product where id_bra = :idBra0 and id_cat = :idCat0 ").append(" and status = true order by date desc limit 6) ");
         params.put("idBra0", listID.get(0).getIdBra());
         params.put("idCat0", listID.get(0).getIdCat());
         for (int i = 1; i < listID.size(); i++) {
             sql.append(" union ");
-            sql.append("(select id, name_pro namePro, price, id_cat idCat, id_bra idBra, image from product where id_bra = :idBra").append(i).append(" and id_cat = :idCat").append(i).append(" and status = 1 order by date desc limit 6) ");
+            sql.append("(select id, name_pro namePro, price, id_cat idCat, id_bra idBra, image from product where id_bra = :idBra").append(i).append(" and id_cat = :idCat").append(i).append(" and status = true order by date desc limit 6) ");
             params.put("idBra" + i, listID.get(i).getIdBra());
             params.put("idCat" + i, listID.get(i).getIdCat());
         }
@@ -160,7 +160,7 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
         Map<String, Object> params = new HashMap<>();
         sql.append(" From Product where id = :id ");
         params.put("id", id);
-        Query query = entityManager.createNativeQuery("SELECT id, namePro, price, idCat, idBra, description, " +
+        Query query = entityManager.createNativeQuery("SELECT id, name_pro namePro, price, id_cat idCat, id_bra idBra, description, " +
                 " screen,  os, ram, battery, date, image, status, rate " + sql.toString() , "ProductDTO");
         Common.setParams(query, params);
         ProductDTO productDTO = (ProductDTO) query.getSingleResult();

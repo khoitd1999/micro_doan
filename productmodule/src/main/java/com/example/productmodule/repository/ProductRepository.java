@@ -27,7 +27,7 @@ public interface ProductRepository extends JpaRepository<Product, Long>, Product
             "status = ?11 where id = ?12", nativeQuery = true)
     void updateOne(String namePro, Double price, Long idCat, Long idBra, String description, String screen, String os, String ram, String battery, LocalDate date, Boolean status, Long id);
 
-    @Query(value = "select rate from Comment where id_pro = ?1", nativeQuery = true)
+    @Query(value = "select rate from Comments where id_pro = ?1", nativeQuery = true)
     List<Double> listRate(Long id);
 
     @Modifying

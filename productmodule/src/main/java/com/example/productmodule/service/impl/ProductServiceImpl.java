@@ -52,7 +52,7 @@ public class ProductServiceImpl implements ProductService {
         return resObjects;
     }
 
-    public List<Brand> getBrand(Long idCat) {
+    public List<Brand> getBrand(String idCat) {
         return brandRepository.getBrand(idCat);
     }
 

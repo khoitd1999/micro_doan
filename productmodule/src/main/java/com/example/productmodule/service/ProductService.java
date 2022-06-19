@@ -16,7 +16,7 @@ import java.util.List;
 public interface ProductService {
     List<Object> getBrandAndCategory();
 
-    List<Brand> getBrand(Long idCat);
+    List<Brand> getBrand(String idCat);
 
     Product save(Product product, MultipartFile multipartFile) throws IOException;
 

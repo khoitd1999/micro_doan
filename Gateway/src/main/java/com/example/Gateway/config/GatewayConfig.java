@@ -25,6 +25,9 @@ public class GatewayConfig {
                 .route(p -> p
                         .path("/product/**")
                         .uri("lb://product-module"))
+                .route(p -> p
+                        .path("/login/**")
+                        .uri("lb://user-module"))
                 .build();
     }
 

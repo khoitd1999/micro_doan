@@ -7,6 +7,6 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.List;
 
 public interface CommentRepository extends JpaRepository<Comment, Long> {
-    @Query(value = "select * from Comment where idPro = ?1 order by date desc", nativeQuery = true)
+    @Query(value = "select * from Comments where id_pro = ?1 order by date desc", nativeQuery = true)
     List<Comment> getAllComment(Long id);
 }

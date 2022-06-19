@@ -74,6 +74,25 @@ services:
     networks:
       - rabbitmq-network
 
+  # Users Service
+  users:
+    image: khoitd1999/users_doan:v1
+    container_name: users_doan
+    build:
+      context: usermodule
+      dockerfile: Dockerfile
+    restart: always
+    ports:
+      - "2000:2000"
+    depends_on:
+      - registration
+      - rabbitmq
+      - db
+    networks:
+      - registration-network
+      - rabbitmq-network
+      - postgres-network
+
   # Product Service
   product:
     image: khoitd1999/product_doan:v1
