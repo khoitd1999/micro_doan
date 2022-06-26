@@ -20,18 +20,13 @@ spring:
   application:
     name: user-module
   # rabbitmq
-#  rabbitmq:
-#    host: localhost
-#    port: 5672
-#    username: guest
-#    password: guest
-#    publisher-confirm-type: correlated
-#    publisher-returns: true
-# properties of rabbitmq
-#rabbitmq:
-#  exchange: khoi.exchange
-#  queue1: khoi.queue1
-# port
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+    publisher-confirm-type: correlated
+    publisher-returns: true
 server:
   port: 2000
 

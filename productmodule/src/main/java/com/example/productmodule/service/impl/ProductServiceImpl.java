@@ -53,7 +53,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     public List<Brand> getBrand(String idCat) {
-        return brandRepository.getBrand(idCat);
+        return brandRepository.getBrand("%" + idCat + "%");
     }
 
     public Product save(Product product, MultipartFile multipartFile) throws IOException {

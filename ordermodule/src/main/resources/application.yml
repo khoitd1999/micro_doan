@@ -1,0 +1,36 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/newdb
+    username: postgres
+    password: 123456a@
+  jpa:
+    hibernate:
+      ddl-auto: none
+      #ddl-auto: create-drop
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        enable_lazy_load_no_trans: true
+        event:
+          merge:
+            entity_copy_observer: allow #fix bug : Multiple represent in same entity
+  # service name
+  application:
+    name: order-module
+  # rabbitmq
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+    publisher-confirm-type: correlated
+    publisher-returns: true
+server:
+  port: 2003
+
+# map with eureka server url
+eureka:
+  client:
+    service-url:
+      default-zone: http://localhost:8761/eureka
+

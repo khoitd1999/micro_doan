@@ -28,6 +28,24 @@ public class GatewayConfig {
                 .route(p -> p
                         .path("/login/**")
                         .uri("lb://user-module"))
+                .route(p -> p
+                        .path("/warehouse/**")
+                        .uri("lb://common-module"))
+                .route(p -> p
+                        .path("/policy/**")
+                        .uri("lb://common-module"))
+                .route(p -> p
+                        .path("/bill/**")
+                        .uri("lb://order-module"))
+                .route(p -> p
+                        .path("/cart/**")
+                        .uri("lb://order-module"))
+                .route(p -> p
+                        .path("/inventory/**")
+                        .uri("lb://order-module"))
+                .route(p -> p
+                        .path("/warehousereceipt/**")
+                        .uri("lb://order-module"))
                 .build();
     }
 

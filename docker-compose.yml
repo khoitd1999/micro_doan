@@ -92,6 +92,25 @@ services:
       - registration-network
       - rabbitmq-network
       - postgres-network
+  
+  # Common Service
+  common:
+    image: khoitd1999/common_doan:v1
+    container_name: common_doan
+    build:
+      context: commonmodule
+      dockerfile: Dockerfile
+    restart: always
+    ports:
+      - "2001:2001"
+    depends_on:
+      - registration
+      - rabbitmq
+      - db
+    networks:
+      - registration-network
+      - rabbitmq-network
+      - postgres-network
 
   # Product Service
   product:
@@ -103,6 +122,25 @@ services:
     restart: always
     ports:
       - "2002:2002"
+    depends_on:
+      - registration
+      - rabbitmq
+      - db
+    networks:
+      - registration-network
+      - rabbitmq-network
+      - postgres-network
+
+  # Order Service
+  order:
+    image: khoitd1999/order_doan:v1
+    container_name: order_doan
+    build:
+      context: ordermodule
+      dockerfile: Dockerfile
+    restart: always
+    ports:
+      - "2003:2003"
     depends_on:
       - registration
       - rabbitmq
