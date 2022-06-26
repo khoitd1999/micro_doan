@@ -42,7 +42,7 @@ services:
       - redis
     networks:
       - registration-network
-      - redis-network 
+      - redis-network
 
   # Postgresql Service
   db:
@@ -150,6 +150,23 @@ services:
       - rabbitmq-network
       - postgres-network
 
+  # Frontend Service
+  frontend:
+    image: khoitd1999/frontend_doan:v1
+    container_name: frontend_doan
+    build:
+      context: frontendmodule
+      dockerfile: Dockerfile
+    restart: always
+    ports:
+      - '80:4200'
+    depends_on:
+      - gateway
+      - users
+      - common
+      - product
+      - order
+
 volumes:
   postgres_db:
 
@@ -159,3 +176,4 @@ networks:
   redis-network:
   rabbitmq-network:
   postgres-network:
+  frontend-network:
