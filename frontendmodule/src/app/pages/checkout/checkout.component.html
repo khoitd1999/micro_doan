@@ -1,0 +1,245 @@
+<!-- cart-main-area start -->
+<div class="cart-main-area ptb--120" style="background: #EBE9E9;">
+  <div class="container">
+    <div nz-row>
+      <div nz-col nzSpan="2">
+      </div>
+      <div nz-col nzSpan="22">
+        <div class="buttons-cart">
+          <a routerLink="/pages">Tiếp tục mua hàng</a>
+        </div>
+      </div>
+    </div>
+    <div nz-row>
+      <div nz-col nzSpan="2"></div>
+      <div nz-col nzSpan="20" style="background: #fff;" align="center">
+        <div style="padding: 20px;">
+          <h1>THANH TOÁN</h1>
+          <nz-divider nzOrientation="left" nzText="Giỏ hàng"></nz-divider>
+          <div nz-row>
+            <div nz-col nzSpan="2"></div>
+            <div nz-col nzSpan="20">
+              <nz-table #basicTable [nzBordered]="true" [nzData]="carts">
+                <thead>
+                <tr>
+                  <th style="width: 35%" [nzAlign]="'center'">Ảnh</th>
+                  <th style="width: 25%">Tên sản phẩm</th>
+                  <th style="width: 10%">Số lượng</th>
+                  <th style="width: 15%">Đơn giá</th>
+                  <th style="width: 15%">Thành tiền</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr *ngFor="let data of basicTable.data">
+                  <td style="width: 35%" [nzAlign]="'center'"><img src="{{data.image}}" style="width: 150px;" alt="logo"></td>
+                  <td style="width: 25%">{{ data.namePro }}</td>
+                  <td style="width: 10%">{{ data.quantity }}</td>
+                  <td style="width: 15%">{{ data.price | currency:  'VND':'symbol':'1.0-0':'vi-VN' }}</td>
+                  <td style="width: 15%">{{ data.amount | currency:  'VND':'symbol':'1.0-0':'vi-VN' }}</td>
+                </tr>
+                </tbody>
+              </nz-table>
+            </div>
+            <div nz-col nzSpan="2"></div>
+          </div>
+          <nz-divider nzOrientation="left" nzText="Thông tin khách hàng"></nz-divider>
+          <div nz-row>
+            <div nz-col nzSpan="2"></div>
+            <div nz-col nzSpan="20">
+              <div nz-col [nzSpan]="4" style="margin-top: 5px;">Tên khách hàng</div>
+              <div nz-col [nzSpan]="8">
+                <input nz-input [(ngModel)]="client.fullName" name="nameCli" style="color: #000" disabled />
+              </div>
+              <div nz-col style="margin-top: 5px;" [nzSpan]="4">Số điện thoại</div>
+              <div nz-col [nzSpan]="8">
+                <input nz-input [(ngModel)]="client.phone" name="phone" style="color: #000" disabled />
+              </div>
+            </div>
+            <div nz-col nzSpan="2"></div>
+          </div>
+          <nz-divider nzOrientation="left" nzText="Thông tin giao hàng"></nz-divider>
+          <div nz-row>
+            <div nz-col nzSpan="2"></div>
+            <div nz-col nzSpan="20">
+              <div nz-col nzSpan="4">Hình thức giao hàng</div>
+              <nz-radio-group  nz-col nzSpan="10" [(ngModel)]="typeShip" name="typeShip" (ngModelChange)="changeTypeShip()">
+                <label nz-radio nzValue=0>Giao hàng tận nơi</label>
+                <label nz-radio nzValue=1>Nhận tại cửa hàng</label>
+              </nz-radio-group>
+              <div nz-col nzSpan="10"></div>
+            </div>
+            <div nz-col nzSpan="2"></div>
+          </div>
+          <div nz-row style="margin-top: 15px;" *ngIf="typeShip === GIAO_HANG_TAN_NOI">
+            <div nz-col nzSpan="2"></div>
+            <div nz-col nzSpan="20" style="background: #EBE9E9;" align="left">
+              <div style="padding: 10px;">
+                <p>Chọn địa chỉ để biết chi phí giao hàng (nếu có)</p>
+                <div nz-row>
+                  <div nz-col nzSpan="12">
+                    <nz-select style="width: 98%" [(ngModel)]="idProType0" nzPlaceHolder="Chọn tỉnh, thành phố"
+                               nzAllowClear (ngModelChange)="idDisType0 = null; onSearch(null)" >
+                      <nz-option *ngFor="let option of provinces" [nzValue]="option.code" [nzLabel]="option.name"></nz-option>
+                    </nz-select>
+                  </div>
+                  <div nz-col nzSpan="12">
+                    <nz-select style="width: 98%" [(ngModel)]="idDisType0" nzPlaceHolder="Chọn quận huyện"
+                               nzAllowClear (ngModelChange)="idWarType0 = null; onSearch(null)" [nzDisabled]="!idProType0 || (idProType0 && idProType0 === '')">
+                      <nz-option *ngFor="let option of districts" [nzValue]="option.code" [nzLabel]="option.name"></nz-option>
+                    </nz-select>
+                  </div>
+                </div>
+                <div nz-row style="margin-top: 10px;">
+                  <div nz-col nzSpan="12">
+                    <nz-select style="width: 98%" [(ngModel)]="idWarType0" nzPlaceHolder="Chọn xã phường"
+                               nzAllowClear (ngModelChange)="calculateFee()" [nzDisabled]="!idDisType0 || (idDisType0 && idDisType0 === '')">
+                      <nz-option *ngFor="let option of wards" [nzValue]="option.code" [nzLabel]="option.name"></nz-option>
+                    </nz-select>
+                  </div>
+                  <div nz-col nzSpan="12">
+                    <input nz-input style="width: 98%" [(ngModel)]="street" name="street" placeholder="Tên đường" />
+                  </div>
+                </div>
+                <div nz-row style="margin-top: 15px; background-color: #FFFFFF; padding: 20px;" *ngIf="idWarType0">
+                  <nz-table #rowSelectionTable [nzBordered]="true"  [nzData]="[deliveryCharge]" *ngIf="deliveryCharge && deliveryCharge.id">
+                    <thead>
+                    <tr>
+                      <th></th>
+                      <th>Địa chỉ cửa hàng</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr *ngFor="let data of rowSelectionTable.data; let i = index">
+                      <td
+                      ><label nz-checkbox [(ngModel)]="data.selected" disabled></label></td>
+                      <td>{{ data.address }}</td>
+                    </tr>
+                    </tbody>
+                  </nz-table>
+                  <p *ngIf="!deliveryCharge">Không có cửa hàng còn hàng nào trong khu vực của khách hàng</p>
+                </div>
+                <div nz-row style="margin-top: 15px;" *ngIf="cartsNotPurchases && cartsNotPurchases.length > 0">
+                  <p>SẢN PHẨM KHÔNG CÓ SẴN Ở NƠI GẦN NHẤT</p>
+                  <nz-table #basicTable [nzBordered]="true" [nzData]="cartsNotPurchases" style="margin-top: 10px; background-color: #FFFFFF; padding: 20px;">
+                    <thead>
+                    <tr>
+                      <th style="width: 25%" [nzAlign]="'center'">Ảnh</th>
+                      <th style="width: 55%">Tên sản phẩm</th>
+                      <th style="width: 20%" [nzAlign]="'center'">Xóa sản phẩm</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr *ngFor="let data of basicTable.data">
+                      <td style="width: 25%" [nzAlign]="'center'"><img src="{{data.image}}" style="width: 100px;" alt="logo"></td>
+                      <td style="width: 55%">{{ data.namePro }}</td>
+                      <td style="width: 20%" [nzAlign]="'center'"><i nz-icon nzType="delete" (click)="removeProductFromCart(data)"></i></td>
+                    </tr>
+                    </tbody>
+                  </nz-table>
+                </div>
+                <div nz-row style="margin-top: 10px; border-top: 1px solid #FFFFFF" *ngIf="cartsNotPurchases && cartsNotPurchases.length === 0 && deliveryCharge">
+                  <p style="margin-top: 10px;">Khoảng cách giao hàng là: {{deliveryCharge.distance}}</p>
+                  <p style="margin-top: 10px;">Phí giao hàng áp dụng:
+                    <span style="color: red;">{{deliveryCharge.fee > 0 ? (deliveryCharge.fee | currency: 'VND':'symbol':'1.0-0':'vi-VN') : 'Miễn phí'}}</span>
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div nz-col nzSpan="2"></div>
+          </div>
+          <div nz-row style="margin-top: 15px;" *ngIf="typeShip === NHAN_TAI_CUA_HANG">
+            <div nz-col nzSpan="2"></div>
+            <div nz-col nzSpan="20" style="background: #EBE9E9;" align="left">
+              <div style="padding: 10px;">
+                <div nz-row>
+                  <div nz-col nzSpan="12">
+                    <nz-select style="width: 98%" [(ngModel)]="idPro" nzShowSearch nzPlaceHolder="Chọn tỉnh, thành phố"
+                               nzAllowClear (ngModelChange)="changeAddress(true)">
+                      <nz-option *ngFor="let option of provinces" [nzValue]="option.code" [nzLabel]="option.name"></nz-option>
+                    </nz-select>
+                  </div>
+                  <div nz-col nzSpan="12">
+                    <nz-select style="width: 98%" [(ngModel)]="idDis" nzShowSearch nzPlaceHolder="Chọn quận huyện"
+                               (ngModelChange)="changeAddress(false)" nzAllowClear
+                               [nzDisabled]="!idPro || (idPro && idPro === '')"
+                    >
+                      <nz-option *ngFor="let option of districts" [nzValue]="option.code" [nzLabel]="option.name"></nz-option>
+                    </nz-select>
+                  </div>
+                </div>
+                <div nz-row style="margin-top: 15px; background-color: #FFFFFF; padding: 20px;">
+                  <nz-table #rowSelectionTable [nzBordered]="true"  [nzData]="warehouses" *ngIf="warehouses.length > 0">
+                    <thead>
+                    <tr>
+                      <th></th>
+                      <th>Địa chỉ cửa hàng</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr *ngFor="let data of rowSelectionTable.data; let i = index">
+                      <td
+                      ><label nz-checkbox [(ngModel)]="data.selected" (ngModelChange)="changeWarehouse(i)"></label></td>
+                      <td>{{ data.address }}</td>
+                    </tr>
+                    </tbody>
+                  </nz-table>
+                  <p *ngIf="warehouses.length === 0">Địa chỉ đã chọn chưa có cửa hàng nào</p>
+                </div>
+                <div nz-row style="margin-top: 15px;" *ngIf="cartsNotPurchases && cartsNotPurchases.length > 0">
+                  <p>SẢN PHẨM KHÔNG CÓ SẴN TRONG CỬA HÀNG ĐÃ CHỌN</p>
+                  <nz-table #basicTable [nzBordered]="true" [nzData]="cartsNotPurchases" style="margin-top: 10px; background-color: #FFFFFF; padding: 20px;">
+                    <thead>
+                    <tr>
+                      <th style="width: 25%" [nzAlign]="'center'">Ảnh</th>
+                      <th style="width: 55%">Tên sản phẩm</th>
+                      <th style="width: 20%" [nzAlign]="'center'">Xóa sản phẩm</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr *ngFor="let data of basicTable.data">
+                      <td style="width: 25%" [nzAlign]="'center'"><img src="{{data.image}}" style="width: 100px;" alt="logo"></td>
+                      <td style="width: 55%">{{ data.namePro }}</td>
+                      <td style="width: 20%" [nzAlign]="'center'"><i nz-icon nzType="delete" (click)="removeProductFromCart(data)"></i></td>
+                    </tr>
+                    </tbody>
+                  </nz-table>
+                </div>
+              </div>
+            </div>
+            <div nz-col nzSpan="2"></div>
+          </div>
+
+          <!--  Tổng tiền -->
+          <nz-divider nzOrientation="left" nzText="Số tiền cần thanh toán"></nz-divider>
+          <div nz-row>
+            <div nz-col nzSpan="2"></div>
+            <div nz-col nzSpan="20" align="left">
+              <div nz-row>
+                <div nz-col nzSpan="12" style="font-size: 15px; font-weight: 500;">SỐ TIỀN</div>
+                <span nz-col nzSpan="12" style="font-size: 20px; color: red; font-weight: 500;" align="right">{{calculateAmount() | currency: 'VND':'symbol':'1.0-0':'vi-VN'}}</span>
+              </div>
+              <div nz-row style="margin-top: 5px;" *ngIf="deliveryCharge && deliveryCharge.fee > 0">
+                <div nz-col nzSpan="12" style="font-size: 15px; font-weight: 500;">PHÍ GIAO HÀNG</div>
+                <span nz-col nzSpan="12" style="font-size: 20px; color: red; font-weight: 500;" align="right">{{deliveryCharge.fee | currency: 'VND':'symbol':'1.0-0':'vi-VN'}}</span>
+              </div>
+              <div nz-row style="margin-top: 10px;">
+                <p nz-col nzSpan="12" style="font-size: 20px; font-weight: 500;">TỔNG TIỀN:</p>
+                <span nz-col nzSpan="12" style="font-size: 20px; color: red; font-weight: 500;" align="right">{{calculateTotalAmount() | currency: 'VND':'symbol':'1.0-0':'vi-VN'}}</span>
+              </div>
+              <div>
+                <div class="buttons-cart" *ngIf="!checkErr()">
+                  <a style="width: 100%; text-align: center; height: 50px !important; line-height: 50px;" (click)="save()">MUA HÀNG</a>
+                </div>
+                <div class="buttons-cart" *ngIf="checkErr()">
+                  <a style="width: 100%; text-align: center; height: 50px !important; line-height: 50px; background-color: #777474" disabled>MUA HÀNG</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div nz-col nzSpan="2"></div>
+    </div>
+  </div>
+</div>
+<!-- cart-main-area end -->

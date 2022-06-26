@@ -1,0 +1,215 @@
+<div style="height: 850px;">
+  <div class="header-page">
+    <div nz-row>
+      <div nz-col nzSpan="2">
+        Tên sản phẩm:
+      </div>
+      <div nz-col nzSpan="22">
+        <input nz-input [(ngModel)]="nameSearch" />
+      </div>
+    </div>
+    <div nz-row>
+      <div nz-col nzSpan="2" style="padding-left: 0; margin-top: 15px;">
+        Loại sản phẩm:
+      </div>
+      <div nz-col nzSpan="10" style="margin-top: 15px;">
+        <nz-select style="width: 100%" [(ngModel)]="idCat" nzPlaceHolder="Chọn loại sản phẩm"
+                   nzAllowClear (ngModelChange)="changeCategorySearch()">
+          <nz-option *ngFor="let option of categoriesSearch" [nzValue]="option.id" [nzLabel]="option.nameCate"></nz-option>
+        </nz-select>
+      </div>
+      <div nz-col nzSpan="2" style="padding-left: 8px; margin-top: 15px;">
+        Loại nhãn hàng:
+      </div>
+      <div nz-col nzSpan="10" style="margin-top: 15px;">
+        <nz-select style="width: 100%" [(ngModel)]="idBra" nzPlaceHolder="Chọn nhãn hàng"
+                   nzAllowClear (ngModelChange)="changeBrandSearch()">
+          <nz-option *ngFor="let option of brandesSearch" [nzValue]="option.id" [nzLabel]="option.nameBra"></nz-option>
+        </nz-select>
+      </div>
+    </div>
+    <br>
+    <div>
+      <div nz-row>
+        <div nz-col nzSpan="20">
+        </div>
+        <div nz-col nzSpan="4">
+          <div nz-row nzJustify="end">
+            <button nz-button nzType="primary" style="margin-right: 8px;" (click)="searchPagination()">Tìm kiếm</button>
+            <button nz-button nzType="default" (click)="clearText()">Clear</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <nz-divider></nz-divider>
+  <div class="body-page">
+    <div nz-row>
+      <div nz-col nzSpan="20">
+        <p style="font-size: 15px">Tìm thâý {{total}} kết quả</p>
+      </div>
+      <div nz-col nzSpan="4">
+        <div nz-row nzJustify="end">
+          <button nz-button nzType="primary" (click)="openModal()">Thêm mới</button>
+        </div>
+      </div>
+    </div>
+
+    <nz-table  nzShowSizeChanger
+               [nzData]="products"
+               [nzBordered]="true"
+               [nzFrontPagination]="false"
+               [nzLoading]="loading"
+               [nzTotal]="total"
+               [nzPageSize]="pageSize"
+               [nzPageIndex]="pageIndex"
+               [nzScroll]="{ y: '400px' }"
+               (nzPageIndexChange)="onCurrentPageDataChange($event, false)"
+               (nzPageSizeChange)="onCurrentPageDataChange($event, true)"
+               style="margin-top: 20px;"
+    >
+      <thead>
+      <tr>
+        <th style="width: 10%">Ngày ra mắt</th>
+        <th style="width: 40%">Tên sản phẩm</th>
+        <th style="width: 20%">Ảnh</th>
+        <th style="width: 15%">Trạng thái</th>
+        <th style="width: 15%">Thao tác</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let data of products; let i = index">
+        <td style="width: 10%">{{ data.date | customDate}}</td>
+        <td style="width: 40%">{{ data.namePro }}</td>
+        <td style="width: 20%"><img
+          width="100px"
+          height="100px"
+          src="{{data.image}}"
+          alt=""
+        /></td>
+        <td style="width: 15%">{{ data.status ? 'Hoạt động' : 'Không hoạt động' }}</td>
+        <td style="width: 75%">
+          <i nz-icon nzType="edit" (click)="openModal(data)" style="margin-left: 15px;"></i>
+          <i nz-icon nzType="delete" (click)="showDeleteConfirm(data, 'Bạn có chắc chắn thay đổi không?')" style="margin-left: 15px;" *ngIf="data.status"></i>
+        </td>
+      </tr>
+      </tbody>
+    </nz-table>
+
+    <nz-modal
+      [(nzVisible)]="isVisible"
+      nzTitle="{{ titleModal }}"
+      (nzOnOk)="handleOk()"
+      (nzOnCancel)="handleCancel()"
+      [nzOkLoading]="isOkLoading"
+      [nzWidth]="1200"
+      nzCancelText="Đóng lại"
+    >
+      <ng-container>
+        <div nz-row>
+          <div nz-col nzSpan="2">
+            Tên sản phẩm:
+          </div>
+          <div nz-col nzSpan="22">
+            <input nz-input [(ngModel)]="product.namePro" [disabled]="this.product.id" />
+          </div>
+        </div>
+        <div nz-row style="margin-top: 15px;">
+          <div nz-col nzSpan="2">
+            Loại sản phẩm:
+          </div>
+          <div nz-col nzSpan="10">
+            <nz-select style="width: 100%" nzShowSearch nzPlaceHolder="Chọn loại sản phẩm"
+                       nzAllowClear [(ngModel)]="product.idCat"  (ngModelChange)="changeCategoryPopup()">
+              <nz-option *ngFor="let option of categoriesPopup" [nzValue]="option.id" [nzLabel]="option.nameCate"></nz-option>
+            </nz-select>
+          </div>
+          <div nz-col nzSpan="2" style="padding-left: 20px;">
+            Nhãn hàng:
+          </div>
+          <div nz-col nzSpan="10">
+            <nz-select style="width: 100%" nzShowSearch nzPlaceHolder="Chọn nhãn hàng"
+                       nzAllowClear  [(ngModel)]="product.idBra" (ngModelChange)="changeBrandPopup()">
+              <nz-option *ngFor="let option of brandesPopup" [nzValue]="option.id" [nzLabel]="option.nameBra"></nz-option>
+            </nz-select>
+          </div>
+        </div>
+        <div nz-row style="margin-top: 15px;">
+          <div nz-col nzSpan="2">
+            Giá bán:
+          </div>
+          <div nz-col nzSpan="10" >
+            <input nz-input [(ngModel)]="product.price" />
+          </div>
+          <div nz-col nzSpan="2" style="padding-left: 20px;">
+            Ngày ra mắt:
+          </div>
+          <div nz-col nzSpan="10">
+            <nz-date-picker [(ngModel)]="product.date" (ngModelChange)="onChange($event)" [nzFormat]="dateFormat" style="margin: 0 8px 12px 0;"></nz-date-picker>
+          </div>
+        </div>
+        <div nz-row style="margin-top: 15px;">
+          <div nz-col nzSpan="2">
+            Màn hình:
+          </div>
+          <div nz-col nzSpan="10">
+            <input nz-input [(ngModel)]="product.screen" />
+          </div>
+          <div nz-col nzSpan="2" style="padding-left: 20px;">
+            Ram:
+          </div>
+          <div nz-col nzSpan="10">
+            <input nz-input [(ngModel)]="product.ram" />
+          </div>
+        </div>
+        <div nz-row style="margin-top: 15px;">
+          <div nz-col nzSpan="2">
+            OS:
+          </div>
+          <div nz-col nzSpan="10">
+            <input nz-input [(ngModel)]="product.os" />
+          </div>
+          <div nz-col nzSpan="2" style="padding-left: 20px;">
+            Pin:
+          </div>
+          <div nz-col nzSpan="10">
+            <input nz-input [(ngModel)]="product.battery" />
+          </div>
+        </div>
+        <div nz-row style="margin-top: 15px;">
+          <div nz-col nzSpan="2">
+            Mô tả:
+          </div>
+          <div nz-col nzSpan="22">
+         <textarea
+           nz-input
+           [(ngModel)]="product.description"
+           [nzAutosize]="{ minRows: 2, maxRows: 6 }"
+         ></textarea>
+          </div>
+        </div>
+        <div nz-row style="margin-top: 15px;">
+          <div nz-col nzSpan="2">
+            Ảnh:
+          </div>
+          <div nz-col nzSpan="10">
+            <div class="clearfix">
+              <nz-upload
+                nzListType="picture"
+                [(nzFileList)]="fileList1"
+              >
+                <button nz-button>
+                  <i nz-icon nzType="upload"></i>
+                  Upload
+                </button>
+              </nz-upload>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+      <div nz-col nzSpan="2">
+      </div>
+      <label nz-checkbox style="margin-top: 8px;" [(ngModel)]="product.status">Trạng thái</label>
+    </nz-modal>
+  </div>
+</div>

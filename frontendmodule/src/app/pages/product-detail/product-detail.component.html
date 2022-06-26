@@ -1,0 +1,179 @@
+<!-- Start Product Details -->
+<section class="htc__product__details pt--120 pb--100 bg__white">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-6 col-lg-6 col-sm-12 col-xs-12">
+        <div class="product__details__container">
+          <div class="product__big__images">
+            <div class="portfolio-full-image tab-content">
+              <div role="tabpanel" class="tab-pane fade in active product-video-position" id="img-tab-1">
+                <img src="{{product.image}}" alt="full-image">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6 col-lg-6 col-sm-12 col-xs-12 smt-30 xmt-30">
+        <div class="htc__product__details__inner">
+          <div class="pro__detl__title">
+            <h2>{{product.namePro}}</h2>
+          </div>
+          <div class="pro__dtl__rating">
+            <nz-rate [(ngModel)]="product.rate" nzAllowHalf disabled></nz-rate>
+          </div>
+          <div nz-row style="margin-top: 20px;">
+            <div nz-col nzSpan="3" style="margin-top: 6px;">GIÁ TẠI: </div>
+            <div nz-col nzSpan="10">
+              <nz-select [(ngModel)]="codePro" (ngModelChange)="getQuantityInventory()" style="width: 100%" nzPlaceHolder="Tỉnh thành"
+                         nzAllowClear>
+                <nz-option *ngFor="let option of provinces" [nzValue]="option.code" [nzLabel]="option.name"></nz-option>
+              </nz-select>
+            </div>
+            <div nz-col nzSpan="11"></div>
+          </div>
+          <ul class="pro__dtl__prize" *ngIf="quantityInInventory > 0">
+            <li style="font-weight: 500">{{product.price | currency: 'VND':'symbol':'1.0-0':'vi-VN'}}</li>
+          </ul>
+          <ul class="pro__dtl__prize" *ngIf="quantityInInventory === 0">
+            <li style="font-weight: 500">Hiện tại không có hàng</li>
+          </ul>
+          <div class="product-action-wrap" *ngIf="quantityInInventory > 0">
+            <div class="prodict-statas"><span>Quantity :</span></div>
+            <div class="choosenumber">
+              <div class="minus" style="pointer-events: all;" (click)="subtractQuantity()">
+                <i style="background-color: rgb(40, 138, 214);"></i>
+              </div>
+              <div class="number">{{quantity}}</div>
+              <div class="plus" style="pointer-events: all;" (click)="addQuantity()">
+                <i style="background-color: rgb(40, 138, 214);"></i>
+                <i style="background-color: rgb(40, 138, 214);"></i>
+              </div>
+              <input type="hidden">
+            </div>
+          </div>
+          <ul class="pro__dtl__btn">
+            <li class="buy__now__btn" *ngIf="quantityInInventory === 0"><a disabled>Thêm vào giỏ</a></li>
+            <li class="buy__now__btn" *ngIf="quantityInInventory > 0"><a (click)="addToCart()">Thêm vào giỏ</a></li>
+          </ul>
+          <div class="pro__social__share">
+            <h2>Share :</h2>
+            <ul class="pro__soaial__link">
+              <li><a><i class="zmdi zmdi-twitter"></i></a></li>
+              <li><a><i class="zmdi zmdi-instagram"></i></a></li>
+              <li><a><i class="zmdi zmdi-facebook"></i></a></li>
+              <li><a><i class="zmdi zmdi-google-plus"></i></a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- End Product Details -->
+<!-- Start Product tab -->
+<section class="htc__product__details__tab bg__white pb--120">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12 col-lg-12 col-sm-12 col-xs-12">
+        <ul class="product__deatils__tab mb--60" role="tablist">
+          <li role="presentation" [class.active]="active">
+            <a (click)="changeActive()" role="tab" data-toggle="tab">Thông tin chi tiết</a>
+          </li>
+          <li role="presentation" [class.active]="!active">
+            <a (click)="changeActive()" role="tab" data-toggle="tab">Đánh giá</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        <div class="product__details__tab__content">
+          <!-- Start Single Content -->
+          <div role="tabpanel" id="description" class="product__tab__content fade" [class.in]="active" [class.active]="active">
+            <div class="product__description__wrap">
+              <div class="product__desc">
+                <h2 class="title__6">Mô tả</h2>
+                <p>{{product.description}}</p>
+              </div>
+              <div class="pro__feature">
+                <h2 class="title__6">Cấu hình máy</h2>
+                <ul class="feature__list">
+                  <li style="font-size: 20px;" *ngIf="product.screen"><i class="zmdi zmdi-play-circle"></i> Màn hình: {{product.screen}}</li>
+                  <li style="font-size: 20px;" *ngIf="product.os"><i class="zmdi zmdi-play-circle"></i> Hệ điều hành: {{product.os}}</li>
+                  <li style="font-size: 20px;" *ngIf="product.ram"><i class="zmdi zmdi-play-circle"></i> RAM: {{product.ram}} </li>
+                  <li style="font-size: 20px;" *ngIf="product.battery"><i class="zmdi zmdi-play-circle"></i> Pin: {{product.battery}}</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <!-- End Single Content -->
+          <!-- Start Single Content -->
+          <div role="tabpanel" id="reviews" class="product__tab__content fade" [class.in]="!active" [class.active]="!active">
+            <div class="review__address__inner">
+<!--              &lt;!&ndash; Start Single Review &ndash;&gt;-->
+<!--              <div class="pro__review" *ngFor="let comment of comments; let i = index">-->
+<!--                <div class="review__details" >-->
+<!--                  <div class="review__info">-->
+<!--                    <div nz-row>-->
+<!--                      <p style="font-size: 20px;">{{comment.nameCli}}</p>-->
+<!--                      <nz-rate [(ngModel)]="comment.rate" nzAllowHalf disabled></nz-rate>-->
+<!--                    </div>-->
+<!--                  </div>-->
+<!--                  <div class="review__date">-->
+<!--                    <span style="font-size: 20px;">{{comment.date | customDate}}</span>-->
+<!--                  </div>-->
+<!--                  <p style="font-size: 20px;">{{comment.comment}}</p>-->
+<!--                </div>-->
+<!--              </div>-->
+<!--              &lt;!&ndash; End Single Review &ndash;&gt;-->
+              <!-- Start Single Review -->
+              <div class="pro__review" *ngFor="let comment of comments; let i = index">
+                <div class="review__details">
+                  <div class="review__info">
+                    <h4><a>{{comment.nameCli}}</a></h4>
+                    <nz-rate [(ngModel)]="comment.rate" nzAllowHalf disabled></nz-rate>
+                    <div class="rating__send">
+                    </div>
+                  </div>
+                  <div class="review__date">
+                    <span>{{comment.date | customDate}}</span>
+                  </div>
+                  <p>{{comment.comment}}</p>
+                </div>
+              </div>
+              <!-- End Single Review -->
+            </div>
+            <!-- Start RAting Area -->
+            <div class="rating__wrap" style="margin-top: 30px;">
+              <h2 class="rating-title">Viết đánh giá của bạn</h2>
+              <h4 class="rating-title-2">Rating</h4>
+              <div class="rating__list">
+                <nz-rate [(ngModel)]="comment.rate" [nzTooltips]="tooltips"></nz-rate>
+              </div>
+            </div>
+            <!-- End RAting Area -->
+            <div class="review__box">
+              <form id="review-form">
+                <div class="single-review-form">
+                  <div class="review-box name">
+                    <input type="text" placeholder="Nhập tên" [(ngModel)]="comment.nameCli" name="nameCli">
+                  </div>
+                </div>
+                <div class="single-review-form">
+                  <div class="review-box message">
+                    <textarea placeholder="Viết bình luận" [(ngModel)]="comment.comment" name="comment"></textarea>
+                  </div>
+                </div>
+                <div class="review-btn">
+                  <a class="fv-btn" (click)="submitComment()">Gửi đánh giá</a>
+                </div>
+              </form>
+            </div>
+          </div>
+          <!-- End Single Content -->
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- End Product tab -->

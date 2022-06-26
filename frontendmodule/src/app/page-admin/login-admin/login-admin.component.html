@@ -1,0 +1,18 @@
+<div class="login">
+  <div class="account-login">
+    <h1>ĐĂNG NHẬP</h1>
+    <form class="login-form">
+      <div class="form-group">
+        <input type="text" placeholder="Tên đăng nhập" class="form-control" name="username" [(ngModel)]="username">
+      </div>
+      <div class="form-group">
+        <input type="password" placeholder="Mật khẩu"  class="form-control" name="password" [(ngModel)]="password">
+      </div>
+      <div class="remember">
+        <a class="pull-right">Quên mật khẩu ?</a>
+      </div>
+      <button class="btn" (click)="checkLogin()">Đăng nhập</button>
+      <p>Bạn chưa có tài khoản?<a>Đăng ký</a></p>
+    </form>
+  </div>
+</div>

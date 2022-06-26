@@ -1,0 +1,73 @@
+<nz-layout style="height: auto">
+  <nz-sider>
+    <div class="logo">
+      <span style="font-weight: bold; font-size: 20pt; color: #fff">TMART</span>
+    </div>
+    <ul nz-menu nzTheme="dark" nzMode="inline">
+      <li nz-menu-item>
+        <i nz-icon nzType="home"></i>
+        <span routerLink="/pages_admin">Danh sách kho</span>
+      </li>
+      <li nz-menu-item>
+        <i nz-icon nzType="mobile"></i>
+        <span routerLink="/pages_admin/product">Danh sách sản phẩm</span>
+      </li>
+      <li nz-menu-item>
+        <i nz-icon nzType="menu"></i>
+        <span routerLink="/pages_admin/bill">Quản lý hóa đơn</span>
+      </li>
+      <li nz-menu-item>
+        <i nz-icon nzType="import"></i>
+        <span routerLink="/pages_admin/import">Quản lý nhập kho</span>
+      </li>
+      <li nz-menu-item>
+        <i nz-icon nzType="export"></i>
+        <span routerLink="/pages_admin/export">Quản lý xuất kho</span>
+      </li>
+      <li nz-menu-item>
+        <i nz-icon nzType="shopping"></i>
+        <span routerLink="/pages_admin/inventory">Hàng tồn kho</span>
+      </li>
+      <li nz-menu-item *ngIf="this.user.role === 'ADMIN'">
+        <i nz-icon nzType="user"></i>
+        <span routerLink="/pages_admin/employee">Quản lý nhân viên</span>
+      </li>
+    </ul>
+  </nz-sider>
+  <nz-layout>
+    <nz-header>
+      <nz-row>
+        <div nz-row>
+          <div nz-col nzSpan="2">
+            <i
+              class="trigger"
+              nz-icon
+              [nzType]="isCollapsed ? 'menu-unfold' : 'menu-fold'"
+              (click)="isCollapsed = !isCollapsed"
+            ></i>
+          </div>
+          <div nz-col nzSpan="18"></div>
+          <div nz-col nzSpan="4">
+            <ul nz-menu nzMode="horizontal">
+              <li nz-submenu nzTitle="Xin chào {{user.fullName}}" nzIcon="user">
+                <ul>
+                  <li nz-menu-item (click)="logout()">Đăng xuất</li>
+                </ul>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </nz-row>
+    </nz-header>
+    <nz-content>
+      <nz-breadcrumb>
+        <nz-breadcrumb-item>ADMIN</nz-breadcrumb-item>
+<!--        <nz-breadcrumb-item>{{alertService.name}}</nz-breadcrumb-item>-->
+      </nz-breadcrumb>
+      <div class="inner-content">
+        <router-outlet></router-outlet>
+      </div>
+    </nz-content>
+    <nz-footer>©2021</nz-footer>
+  </nz-layout>
+</nz-layout>

@@ -1,0 +1,45 @@
+<!-- Start Login Register Area -->
+<div class="htc__login__register bg__white ptb--130" style="background: rgba(0, 0, 0, 0) url(./assets/images/bg/5.jpg) no-repeat scroll center center / cover ;">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-6 col-md-offset-3">
+        <ul class="login__register__menu" role="tablist">
+          <li role="presentation" class="login" [class.active]="isLogin"><a (click)="changeActivity()" role="tab" data-toggle="tab">Login</a></li>
+          <li role="presentation" class="register" [class.active]="!isLogin"><a (click)="changeActivity()" role="tab" data-toggle="tab">Register</a></li>
+        </ul>
+      </div>
+    </div>
+    <!-- Start Login Register Content -->
+    <div class="row">
+      <div class="col-md-6 col-md-offset-3">
+        <div class="htc__login__register__wrap">
+          <!-- Start Single Content -->
+          <div id="login" role="tabpanel" class="single__tabs__panel tab-pane fade" [class.in]="isLogin" [class.active]="isLogin">
+            <form class="login">
+              <input type="number" [(ngModel)]="client.phone" name="phone" placeholder="Phone*">
+              <input type="password" [(ngModel)]="client.password" name="password" placeholder="Password*">
+            </form>
+            <div class="htc__login__btn mt--30">
+              <a (click)="checkLogin()">Login</a>
+            </div>
+          </div>
+          <!-- End Single Content -->
+          <!-- Start Single Content -->
+          <div id="register" role="tabpanel" class="single__tabs__panel tab-pane fade" [class.in]="!isLogin" [class.active]="!isLogin">
+            <form class="login">
+              <input type="number" [(ngModel)]="client.phone" name="phone" placeholder="Phone*">
+              <input type="password" [(ngModel)]="client.password" name="password" placeholder="Pasword*">
+              <input type="text" [(ngModel)]="client.fullName" name="fullName" placeholder="FullName*">
+            </form>
+            <div class="htc__login__btn">
+              <a (click)="registerClient()" style="margin-top: 27px;">Register</a>
+            </div>
+          </div>
+          <!-- End Single Content -->
+        </div>
+      </div>
+    </div>
+    <!-- End Login Register Content -->
+  </div>
+</div>
+<!-- End Login Register Area -->

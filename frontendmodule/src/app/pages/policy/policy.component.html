@@ -1,0 +1,42 @@
+<!-- cart-main-area start -->
+<div class="cart-main-area ptb--120" style="background: #EBE9E9;">
+  <div class="container">
+    <div nz-row>
+      <div nz-col>
+        <div class="buttons-cart">
+          <a routerLink="/pages">Tiếp tục mua hàng</a>
+        </div>
+      </div>
+    </div>
+    <div nz-row style="margin-top: 10px;">
+      <div nz-col style="background: #fff;" align="center">
+        <div style="padding-top: 20px; height: 400px;">
+          <h1>CHÍNH SÁCH VẬN CHUYỂN</h1>
+          <div nz-row>
+            <div nz-col nzSpan="3"></div>
+            <div nz-col nzSpan="18">
+              <nz-table [nzData]="policies" [nzBordered]="true" [nzFrontPagination]="false" [nzShowPagination]="false">
+                <thead>
+                <tr>
+                  <th>STT</th>
+                  <th>Khoảng cách tính phí</th>
+                  <th>Giá tiền</th>
+                </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let data of policies; let i = index">
+                    <td>{{ i + 1 }}</td>
+                    <td>{{ 'Từ ' + data.fromDis + ' km - đến ' + data.toDis + ' km'}}</td>
+                    <td>{{ data.amount | currency:  'VND':'symbol':'1.0-0':'vi-VN'}}</td>
+                  </tr>
+                </tbody>
+              </nz-table>
+            </div>
+            <div nz-col nzSpan="3"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- cart-main-area end -->

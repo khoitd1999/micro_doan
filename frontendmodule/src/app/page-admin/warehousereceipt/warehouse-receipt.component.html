@@ -1,0 +1,125 @@
+<div style="height: 900px;">
+  <div class="header-page">
+    <div nz-row>
+      <div nz-col nzSpan="2" style="padding-left: 0; margin-top: 15px;">
+        Nhân viên:
+      </div>
+      <div nz-col nzSpan="10" style="margin-top: 15px;">
+        <nz-select style="width: 100%" [(ngModel)]="idEmp" nzPlaceHolder="Chọn nhân viên"
+                   nzAllowClear [nzServerSearch]=true>
+          <nz-option *ngFor="let option of employees" [nzValue]="option.id" [nzLabel]="option.fullName"></nz-option>
+        </nz-select>
+      </div>
+      <div nz-col nzSpan="2" style="padding-left: 8px; margin-top: 15px;">
+        Kho:
+      </div>
+      <div nz-col nzSpan="10" style="margin-top: 15px;">
+        <nz-select style="width: 100%" [(ngModel)]="idWar" nzPlaceHolder="Chọn kho"
+                   nzAllowClear [nzServerSearch]=true>
+          <nz-option *ngFor="let option of wareHouses" [nzValue]="option.id" [nzLabel]="option.nameWar"></nz-option>
+        </nz-select>
+      </div>
+    </div>
+    <br>
+    <div>
+      <div nz-row>
+        <div nz-col nzSpan="20">
+        </div>
+        <div nz-col nzSpan="4">
+          <div nz-row nzJustify="end">
+            <button nz-button nzType="primary" style="margin-right: 8px;" (click)="searchPagination()">Tìm kiếm</button>
+            <button nz-button nzType="default" (click)="clearText()">Clear</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <nz-divider></nz-divider>
+  <div class="body-page">
+    <div nz-row>
+      <div nz-col nzSpan="20">
+        <p style="font-size: 15px; font-weight: bold;">Tìm thâý {{total}} kết quả</p>
+      </div>
+      <div nz-col nzSpan="4" *ngIf="type === IMPORT">
+        <div nz-row nzJustify="end">
+          <button nz-button nzType="primary" (click)="redirectToDetail()">Thêm mới</button>
+        </div>
+      </div>
+    </div>
+
+    <nz-table  nzShowSizeChanger
+               [nzBordered]="true"
+               [nzData]="wareHouseReceipts"
+               [nzFrontPagination]="false"
+               [nzLoading]="loading"
+               [nzTotal]="total"
+               [nzPageSize]="pageSize"
+               [nzPageIndex]="pageIndex"
+               [nzScroll]="{ y: '200px' }"
+               (nzPageIndexChange)="onCurrentPageDataChange($event, false)"
+               (nzPageSizeChange)="onCurrentPageDataChange($event, true)"
+               style="margin-top: 20px;"
+    >
+      <thead>
+      <tr>
+        <th style="width: 15%" *ngIf="this.type === IMPORT">Ngày nhập kho</th>
+        <th style="width: 15%" *ngIf="this.type === EXPORT">Ngày xuất kho</th>
+        <th style="width: 15%">Mã nhập</th>
+        <th style="width: 25%">Kho</th>
+        <th style="width: 25%">Nhân viên thực hiện</th>
+        <th style="width: 10%">Tổng tiền</th>
+        <th style="width: 10%">Thao tác</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let data of wareHouseReceipts; let i = index" (click)="onSelect(i)">
+        <td style="width: 15%">{{ data.date | customDate}}</td>
+        <td style="width: 15%">{{ data.code }}</td>
+        <td style="width: 25%">{{ data.nameWar }}</td>
+        <td style="width: 25%">{{ data.nameEmp }}</td>
+        <td style="width: 10%">{{ data.totalAmount | currency: 'VND':'symbol':'1.0-0':'vi-VN' }}</td>
+        <td style="width: 10%">
+          <i nz-icon nzType="edit" style="margin-left: 15px; cursor: pointer;" (click)="redirectToDetail(data.id)" *ngIf="type === IMPORT"></i>
+          <i nz-icon nzType="eye" style="margin-left: 15px; cursor: pointer;" (click)="redirectToDetail(data.id)" *ngIf="type === EXPORT"></i>
+        </td>
+      </tr>
+      </tbody>
+    </nz-table>
+    <div nz-row>
+      <div nz-col nzSpan="20">
+        <p style="font-size: 15px; font-weight: bold;" *ngIf="type === IMPORT">CHI TIẾT ĐƠN NHẬP KHO: {{this.wareHouseReceipt?.code}}</p>
+        <p style="font-size: 15px; font-weight: bold;" *ngIf="type === EXPORT">CHI TIẾT ĐƠN XUẤT KHO: {{this.wareHouseReceipt?.code}}</p>
+      </div>
+    </div>
+    <nz-table  nzShowSizeChanger
+               [nzBordered]="true"
+               [nzData]="wareHouseReceiptDetails"
+               [nzFrontPagination]="false"
+               [nzLoading]="loading"
+               [nzTotal]="total"
+               [nzPageSize]="pageSizeDetail"
+               [nzPageIndex]="pageIndexDetail"
+               [nzScroll]="{ y: '200px' }"
+               (nzPageIndexChange)="onCurrentPageDataChangeDetail($event, false)"
+               (nzPageSizeChange)="onCurrentPageDataChangeDetail($event, true)"
+               style="margin-top: 20px;"
+    >
+      <thead>
+      <tr>
+        <th style="width: 60%">Sản phẩm</th>
+        <th style="width: 10%">Số lượng</th>
+        <th style="width: 15%">Giá bán</th>
+        <th style="width: 15%">Thành tiền</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let data of wareHouseReceiptDetails; let i = index">
+        <td style="width: 60%">{{ data.namePro }}</td>
+        <td style="width: 10%">{{ data.quantity }}</td>
+        <td style="width: 15%">{{ data.price | currency: 'VND':'symbol':'1.0-0':'vi-VN'}}</td>
+        <td style="width: 15%">{{ data.amount | currency: 'VND':'symbol':'1.0-0':'vi-VN'}}</td>
+      </tr>
+      </tbody>
+    </nz-table>
+  </div>
+</div>

@@ -1,0 +1,62 @@
+<!-- cart-main-area start -->
+<div class="cart-main-area ptb--120 bg__white">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-2 col-sm-2 col-xs-12">
+        <div class="buttons-cart">
+          <a routerLink="/pages">Tiếp tục mua hàng</a>
+        </div>
+      </div>
+      <div class="col-md-2 col-sm-2 col-xs-12">
+        <div class="buttons-cart" *ngIf="carts.length > 0">
+          <a routerLink="/pages/checkout">Thanh toán</a>
+        </div>
+      </div>
+      <div class="col-md-8 col-sm-8 col-xs-12"></div>
+    </div>
+    <div class="row">
+      <div class="col-md-12 col-sm-12 col-xs-12">
+        <form action="#">
+          <div class="table-content table-responsive">
+            <table>
+              <thead>
+              <tr>
+                <th class="product-thumbnail">Ảnh sản phẩm</th>
+                <th class="product-name">Tên sản phẩm</th>
+                <th class="product-price">Giá</th>
+                <th class="product-quantity">Số lượng</th>
+                <th class="product-subtotal">Số tiền</th>
+                <th class="product-remove">Xóa</th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr *ngFor="let cart of carts; let i = index">
+                <td class="product-thumbnail">
+                  <img src="{{cart.image}}" alt="product img" />
+                </td>
+                <td class="product-name">
+                  <span style="font-size: 20px; font-weight: 500;">{{cart.namePro}}</span>
+                </td>
+                <td class="product-price">
+                  <span class="price" style="font-size: 20px;">{{cart.price | currency : 'VND':'symbol':'1.0-0':'vi-VN'}}</span>
+                </td>
+                <td class="product-quantity">
+                  <input type="number" pattern="[^\-]+" value="{{cart.quantity}}" name="quantity" min="1" (change)="changeQuantity(i)" id="quantity{{i}}"
+                         onkeypress="return (event.charCode === 8 || event.charCode === 0 || event.charCode === 13) ? null : event.charCode > 48 && event.charCode <= 57" />
+                </td>
+                <td class="product-subtotal">
+                  <span style="font-size: 20px;">{{cart.amount | currency : 'VND':'symbol':'1.0-0':'vi-VN'}}</span>
+                </td>
+                <td class="product-remove">
+                  <a (click)="remove(i)">X</a>
+                </td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- cart-main-area end -->

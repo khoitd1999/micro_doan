@@ -1,0 +1,21 @@
+.product__menu1 {
+  text-align: center;
+}
+.menu-button-custom {
+  background: transparent none repeat scroll 0 0;
+  border: 0 none;
+  color: #666666;
+  font-size: 17px;
+  font-weight: 500;
+  line-height: 20px;
+  padding: 0 20px;
+  text-transform: uppercase;
+  transition: all 0.4s ease 0s;
+}
+
+.one-long-line {
+  max-width: 50px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

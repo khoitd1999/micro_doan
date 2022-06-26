@@ -1,0 +1,4 @@
+.show {
+  transform: translateY(0px);
+  transition: all 300ms ease 0s
+}

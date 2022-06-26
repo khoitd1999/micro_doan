@@ -1,0 +1,135 @@
+<div style="height: 800px;">
+  <div class="header-page">
+    <div nz-row>
+      <div nz-col nzSpan="2">
+        Tên kho:
+      </div>
+      <div nz-col nzSpan="22">
+        <input nz-input [(ngModel)]="nameSearch" />
+      </div>
+    </div>
+    <br>
+    <div>
+      <div nz-row>
+        <div nz-col nzSpan="20">
+        </div>
+        <div nz-col nzSpan="4">
+          <div nz-row nzJustify="end">
+            <button nz-button nzType="primary" style="margin-right: 8px;" (click)="searchPagination()">Tìm kiếm</button>
+            <button nz-button nzType="default" (click)="clearText()">Clear</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <nz-divider></nz-divider>
+  <div class="body-page">
+    <div nz-row>
+      <div nz-col nzSpan="20">
+        <p style="font-size: 15px">Tìm thâý {{total}} kết quả</p>
+      </div>
+      <div nz-col nzSpan="4">
+        <div nz-row nzJustify="end">
+          <button nz-button nzType="primary" (click)="openModal()">Thêm mới</button>
+        </div>
+      </div>
+    </div>
+
+    <nz-table  nzShowSizeChanger
+               [nzData]="warehouses"
+               [nzBordered]="true"
+               [nzFrontPagination]="false"
+               [nzLoading]="loading"
+               [nzTotal]="total"
+               [nzPageSize]="pageSize"
+               [nzPageIndex]="pageIndex"
+               [nzScroll]="{ y: '350px' }"
+               (nzPageIndexChange)="onCurrentPageDataChange($event, false)"
+               (nzPageSizeChange)="onCurrentPageDataChange($event, true)"
+               style="margin-top: 20px;"
+    >
+      <thead>
+      <tr>
+        <th style="width: 5%">STT</th>
+        <th style="width: 20%">Tên kho</th>
+        <th style="width: 45%">Địa chỉ</th>
+        <th style="width: 15%">Trạng thái</th>
+        <th style="width: 15%">Thao tác</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let data of warehouses; let i = index">
+        <td style="width: 5%">{{ generateID(i + 1) }}</td>
+        <td style="width: 20%">{{ data.nameWar }}</td>
+        <td style="width: 45%">{{ data.address }}</td>
+        <td style="width: 15%">{{ data.status ? 'Hoạt động' : 'Không hoạt động' }}</td>
+        <td style="width: 75%">
+          <i nz-icon nzType="edit" (click)="openModal(data)" style="margin-left: 15px;"></i>
+          <i nz-icon nzType="delete" (click)="showDeleteConfirm(data, 'Bạn có chắc chắn thay đổi không?')" style="margin-left: 15px;" *ngIf="data.status"></i>
+        </td>
+      </tr>
+      </tbody>
+    </nz-table>
+
+    <nz-modal
+      [(nzVisible)]="isVisible"
+      nzTitle="{{ titleModal }}"
+      (nzOnOk)="handleOk()"
+      (nzOnCancel)="handleCancel()"
+      [nzOkLoading]="isOkLoading"
+      [nzWidth]="1200"
+      nzCancelText="Đóng lại"
+    >
+      <ng-container>
+        <div nz-row>
+          <div nz-col nzSpan="2">
+            Tên kho:
+          </div>
+          <div nz-col nzSpan="10">
+            <input nz-input [(ngModel)]="warehouse.nameWar" [disabled]="this.warehouse.id" />
+          </div>
+          <div nz-col nzSpan="2" style="padding-left: 20px;">
+            Tỉnh, Thành Phố:
+          </div>
+          <div nz-col nzSpan="10">
+            <nz-select style="width: 100%" nzShowSearch [(ngModel)]="warehouse.idPro" nzPlaceHolder="Chọn tỉnh, thành phố"
+                       nzAllowClear (nzOnSearch)="onSearch($event)" (ngModelChange)="warehouse.idDis = null; onSearch(null)" [nzServerSearch]=true>
+              <nz-option *ngFor="let option of provinces" [nzValue]="option.code" [nzLabel]="option.name"></nz-option>
+            </nz-select>
+          </div>
+        </div>
+        <div nz-row style="margin-top: 15px;">
+          <div nz-col nzSpan="2" style="padding-left: 2px;">
+            Quận, Huyện:
+          </div>
+          <div nz-col nzSpan="10">
+            <nz-select style="width: 100%" nzShowSearch [(ngModel)]="warehouse.idDis" nzPlaceHolder="Chọn quận huyện"
+                       nzAllowClear (nzOnSearch)="onSearch($event)" (ngModelChange)="warehouse.idWar = null; onSearch(null)" [nzServerSearch]=true [nzDisabled]="!warehouse.idPro || (warehouse.idPro && warehouse.idPro === '')">
+              <nz-option *ngFor="let option of districts" [nzValue]="option.code" [nzLabel]="option.name"></nz-option>
+            </nz-select>
+          </div>
+          <div nz-col nzSpan="2" style="padding-left: 20px;">
+            Xã, Phường:
+          </div>
+          <div nz-col nzSpan="10">
+            <nz-select style="width: 100%" nzShowSearch [(ngModel)]="warehouse.idWar" nzPlaceHolder="Chọn xã phường"
+                       nzAllowClear (nzOnSearch)="onSearch($event)" (ngModelChange)="onSearch(null)" [nzServerSearch]=true [nzDisabled]="!warehouse.idDis || (warehouse.idDis && warehouse.idDis === '')">
+              <nz-option *ngFor="let option of wards" [nzValue]="option.code" [nzLabel]="option.name"></nz-option>
+            </nz-select>
+          </div>
+        </div>
+        <div nz-row style="margin-top: 15px;">
+          <div nz-col nzSpan="2" style="margin-top: 16px;">
+            Tên đường:
+          </div>
+          <div nz-col nzSpan="22" style="margin-top: 16px;">
+            <input nz-input [(ngModel)]="warehouse.street" />
+          </div>
+          <div nz-col nzSpan="2">
+          </div>
+          <label nz-checkbox style="margin-top: 8px;" [(ngModel)]="warehouse.status">Trạng thái</label>
+        </div>
+      </ng-container>
+    </nz-modal>
+  </div>
+</div>

@@ -1,0 +1,59 @@
+<!-- Start Our Product Area -->
+<section class="htc__product__area shop__page ptb--130 bg__white">
+  <div class="container">
+    <div class="htc__product__container">
+      <!-- Start Product MEnu -->
+      <div class="row" *ngIf="!isSearching">
+        <div class="col-md-12">
+          <div class="filter__menu__container">
+            <div class="product__menu">
+              <button *ngFor="let bra of brandes" [class.is-checked]="bra.id === idBra" (click)="changeBrand(bra)">{{bra.nameBra}}</button>
+            </div>
+          </div>
+          <div nz-row style="margin-top: 34px;">
+            <div nz-col nzSpan="5">
+              <nz-select style="width: 100%" [(ngModel)]="priceFilter" nzPlaceHolder="Chọn giá"
+                         nzAllowClear (ngModelChange)="filterProducts()">
+                <nz-option *ngFor="let option of prices" [nzValue]="option.id" [nzLabel]="option.name"></nz-option>
+              </nz-select>
+            </div>
+            <div nz-col nzSpan="19"></div>
+          </div>
+        </div>
+      </div>
+      <!-- End Product MEnu -->
+      <div class="row">
+        <div class="product__list another-product-style">
+          <!-- Start Single Product -->
+          <div class="col-md-3 single__pro col-lg-3 cat--1 col-sm-4 col-xs-12" *ngFor="let product of products; let i = index">
+            <div class="product foo">
+              <div class="product__inner">
+                <div class="pro__thumb">
+                  <a routerLink="/pages/product-detail/{{product.id}}">
+                    <img src="{{product.image}}" alt="product images">
+                  </a>
+                </div>
+              </div>
+              <div class="product__details">
+                <h2 style="height: 70px;"><a title="{{product.namePro}}">{{product.namePro}}</a></h2>
+                <ul class="product__price">
+                  <li class="new__price" style="font-size: 18px; font-weight: 600">{{product.price | currency: 'VND':'symbol':'1.0-0':'vi-VN'}}</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <!-- End Single Product -->
+        </div>
+      </div>
+      <!-- Start Load More BTn -->
+      <div class="row mt--60" *ngIf="isLoadMore">
+        <div class="col-md-12">
+          <div class="htc__loadmore__btn">
+            <a (click)="loadMore()">Xem thêm</a>
+          </div>
+        </div>
+      </div>
+      <!-- End Load More BTn -->
+    </div>
+  </div>
+</section>
