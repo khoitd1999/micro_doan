@@ -22,6 +22,7 @@ public class PolicyController {
 
     @GetMapping("/load-all")
     public ResponseEntity<List<Policy>> loadDataAll() {
+        // b1
         try {
             List<Policy> list = policyService.loadAllData();
             return new ResponseEntity<>(list, HttpStatus.OK);
